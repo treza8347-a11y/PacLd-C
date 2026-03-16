@@ -725,24 +725,24 @@
           <div class="input-row">
             <div class="field">
               <label>Prénom</label>
-              <input type="text" name="prenom" placeholder="Jean" />
+              <input type="text" placeholder="Jean" />
             </div>
             <div class="field">
               <label>Nom</label>
-              <input type="text"name="nom" placeholder="Dupont" />
+              <input type="text" placeholder="Dupont" />
             </div>
           </div>
           <div class="field">
             <label>Téléphone</label>
-            <input type="tel" name="telephone" placeholder="06 XX XX XX XX" />
+            <input type="tel" placeholder="06 XX XX XX XX" />
           </div>
           <div class="field">
             <label>Code postal</label>
-            <input type="text" name="code postal" placeholder="75000" />
+            <input type="text" placeholder="75000" />
           </div>
           <div class="field">
             <label>Type de logement</label>
-            <select name="logement">
+            <select>
               <option value="">Sélectionnez...</option>
               <option>Maison individuelle</option>
               <option>Appartement</option>
@@ -751,7 +751,7 @@
           </div>
           <div class="field">
             <label>Revenus du foyer</label>
-            <select name="revenu">
+            <select>
               <option value="">Sélectionnez...</option>
               <option>Moins de 21 000 €/an</option>
               <option>21 000 – 30 000 €/an</option>
@@ -761,7 +761,7 @@
           </div>
         </div>
 
-        <button class="cta-btn" onclick="this.textContent='✓ Demande envoyée !'; this.style.background='linear-gradient(135deg, #2a7a5a, #3DBE82)';">
+        <button class="cta-btn" id="submitBtn" onclick="submitToZapier(event)">
           Je vérifie mon éligibilité gratuitement →
         </button>
 
@@ -926,7 +926,110 @@
 </div>
 
 <script>
-  // Animate counter for social proof
+  // ══════════════════════════════════════════════════════
+  // ⚙️  CONFIGURATION — Remplacez l'URL par la vôtre
+  // ══════════════════════════════════════════════════════
+  const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/XXXXXXX/XXXXXXX/';
+
+  // ══════════════════════════════════════════════════════
+  // 📤  SOUMISSION ZAPIER
+  // ══════════════════════════════════════════════════════
+  async function submitToZapier(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('submitBtn');
+
+    // Collecte des champs
+    const inputs   = document.querySelectorAll('.input-group input');
+    const selects  = document.querySelectorAll('.input-group select');
+
+    const prenom        = inputs[0]?.value.trim();
+    const nom           = inputs[1]?.value.trim();
+    const telephone     = inputs[2]?.value.trim();
+    const code_postal   = inputs[3]?.value.trim();
+    const type_logement = selects[0]?.value;
+    const revenus       = selects[1]?.value;
+
+    // ── Validation ──
+    if (!prenom || !telephone || !code_postal) {
+      showError(btn, '⚠️ Prénom, téléphone et code postal requis');
+      return;
+    }
+    if (!/^0[1-9][0-9]{8}$/.test(telephone.replace(/\s/g, ''))) {
+      showError(btn, '⚠️ Numéro de téléphone invalide');
+      return;
+    }
+    if (!/^\d{5}$/.test(code_postal)) {
+      showError(btn, '⚠️ Code postal invalide (5 chiffres)');
+      return;
+    }
+
+    // ── État chargement ──
+    btn.textContent = '⏳ Envoi en cours...';
+    btn.disabled = true;
+    btn.style.opacity = '0.8';
+
+    // ── Payload ──
+    const payload = {
+      prenom,
+      nom,
+      telephone,
+      code_postal,
+      type_logement,
+      revenus,
+      source:     'Landing PAC 1€',
+      date_heure: new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+      page_url:   window.location.href,
+      user_agent: navigator.userAgent,
+    };
+
+    try {
+      // mode: 'no-cors' obligatoire avec Zapier Webhook (pas de réponse lisible, mais ça fonctionne)
+      await fetch(https://hooks.zapier.com/hooks/catch/26684326/up213l5/, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+        mode:    'no-cors',
+      });
+
+      // ── Succès ──
+      btn.textContent = '✅ Demande envoyée ! On vous rappelle sous 48h';
+      btn.style.background = 'linear-gradient(135deg, #1a6648, #3DBE82)';
+      btn.style.opacity = '1';
+
+      // Tracking optionnel
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'generate_lead', { event_category: 'PAC_1euro', event_label: code_postal });
+      }
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'Lead');
+      }
+
+      // Redirection page de remerciement après 2,5s
+      setTimeout(() => {
+        window.location.href = '/merci.html'; // ← adaptez si besoin
+      }, 2500);
+
+    } catch (err) {
+      console.error('Erreur Zapier :', err);
+      showError(btn, '❌ Erreur réseau — Réessayez');
+    }
+  }
+
+  // ── Helper erreur ──
+  function showError(btn, msg) {
+    btn.textContent = msg;
+    btn.style.background = 'linear-gradient(135deg, #7a1a1a, #E05A5A)';
+    btn.disabled = false;
+    setTimeout(() => {
+      btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
+      btn.style.background = '';
+    }, 3000);
+  }
+
+  // ══════════════════════════════════════════════════════
+  // 🔢  COMPTEUR SOCIAL PROOF
+  // ══════════════════════════════════════════════════════
   const counterEl = document.getElementById('counter');
   let base = 23;
   setInterval(() => {
@@ -935,7 +1038,9 @@
     counterEl.textContent = base;
   }, 4200);
 
-  // Animate cards on scroll
+  // ══════════════════════════════════════════════════════
+  // 🎞️  ANIMATIONS AU SCROLL
+  // ══════════════════════════════════════════════════════
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -951,23 +1056,6 @@
     el.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
     observer.observe(el);
   });
-
-document.getElementById("leadForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    const formData = new FormData(this);
-
-    fetch("https://hooks.zapier.com/hooks/catch/26684326/up213l5/", {
-        method: "POST",
-        body: formData
-    })
-    .then(() => {
-        document.getElementById("successMsg").style.display = "block";
-        document.getElementById("leadForm").reset();
-    })
-    .catch(() => {
-        alert("Erreur d'envoi. Vérifiez votre webhook Zapier.");
-    });
-});
 </script>
 </body>
 </html>
