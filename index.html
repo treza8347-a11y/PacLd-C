@@ -953,99 +953,21 @@
   });
 </script>
 <script>
-// ── CONFIGURATION ZAPIER ──────────────────────────────────────
-const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/XXXXXXX/XXXXXXX/';
-// ↑ Remplacez par votre URL Webhook Zapier (voir instructions ci-dessous)
+document.getElementById("leadForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const formData = new FormData(this);
 
-// ── SOUMISSION DU FORMULAIRE ──────────────────────────────────
-async function submitToZapier(e) {
-  e.preventDefault();
-
-  const btn = document.querySelector('.cta-btn');
-  btn.textContent = '⏳ Envoi en cours...';
-  btn.disabled = true;
-
-  // Collecte des données du formulaire
-  const payload = {
-    prenom:         document.querySelectorAll('input')[0].value.trim(),
-    nom:            document.querySelectorAll('input')[1].value.trim(),
-    telephone:      document.querySelectorAll('input')[2].value.trim(),
-    code_postal:    document.querySelectorAll('input')[3].value.trim(),
-    type_logement:  document.querySelectorAll('select')[0].value,
-    revenus:        document.querySelectorAll('select')[1].value,
-    source:         'Landing PAC 1€',
-    date_heure:     new Date().toLocaleString('fr-FR'),
-    page_url:       window.location.href,
-  };
-
-  // Validation basique
-  if (!payload.prenom || !payload.telephone || !payload.code_postal) {
-    alert('Merci de remplir au minimum : prénom, téléphone et code postal.');
-    btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
-    btn.disabled = false;
-    return;
-  }
-
-  try {
-    await fetch(https://hooks.zapier.com/hooks/catch/26684326/up213l5/, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      mode: 'no-cors' // nécessaire pour Zapier Webhook
+    fetch("https://hooks.zapier.com/hooks/catch/26684326/up213l5/", {
+        method: "POST",
+        body: formData
+    })
+    .then(() => {
+        document.getElementById("successMsg").style.display = "block";
+        document.getElementById("leadForm").reset();
+    })
+    .catch(() => {
+        alert("Erreur d'envoi. Vérifiez votre webhook Zapier.");
     });
-
-    // Succès
-    btn.textContent = '✅ Demande envoyée !';
-    btn.style.background = 'linear-gradient(135deg, #2a7a5a, #3DBE82)';
-
-    // Tracking optionnel (Google Analytics / Meta Pixel)
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'generate_lead', { event_category: 'PAC', event_label: payload.code_postal });
-    }
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'Lead');
-    }
-
-    // Redirection après 2 secondes (page de confirmation)
-    setTimeout(() => {
-      window.location.href = '/merci.html'; // ← adaptez l'URL
-    }, 2000);
-
-  } catch (err) {
-    console.error('Erreur Zapier :', err);
-    btn.textContent = '❌ Erreur — Réessayez';
-    btn.style.background = 'linear-gradient(135deg, #7a2a2a, #E05A5A)';
-    btn.disabled = false;
-  }
-}
-
-// ── ATTACHER L'ÉVÉNEMENT AU BOUTON ───────────────────────────
-document.querySelector('.cta-btn').addEventListener('click', submitToZapier);
-
-// ── COUNTER SOCIAL PROOF (inchangé) ──────────────────────────
-const counterEl = document.getElementById('counter');
-let base = 23;
-setInterval(() => {
-  const delta = Math.random() < 0.5 ? -1 : 1;
-  base = Math.max(14, Math.min(41, base + delta));
-  counterEl.textContent = base;
-}, 4200);
-
-// ── ANIMATIONS SCROLL (inchangé) ─────────────────────────────
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.card, .testi-card, .step').forEach((el, i) => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(24px)';
-  el.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
-  observer.observe(el);
 });
 </script>
 </body>
