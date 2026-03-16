@@ -725,24 +725,24 @@
           <div class="input-row">
             <div class="field">
               <label>Prénom</label>
-              <input type="text" placeholder="Jean" />
+              <input id="f_prenom" type="text" placeholder="Jean" />
             </div>
             <div class="field">
               <label>Nom</label>
-              <input type="text" placeholder="Dupont" />
+              <input id="f_nom" type="text" placeholder="Dupont" />
             </div>
           </div>
           <div class="field">
             <label>Téléphone</label>
-            <input type="tel" placeholder="06 XX XX XX XX" />
+            <input id="f_telephone" type="tel" placeholder="06 XX XX XX XX" />
           </div>
           <div class="field">
             <label>Code postal</label>
-            <input type="text" placeholder="75000" />
+            <input id="f_codepostal" type="text" placeholder="75000" />
           </div>
           <div class="field">
             <label>Type de logement</label>
-            <select>
+            <select id="f_logement">
               <option value="">Sélectionnez...</option>
               <option>Maison individuelle</option>
               <option>Appartement</option>
@@ -751,7 +751,7 @@
           </div>
           <div class="field">
             <label>Revenus du foyer</label>
-            <select>
+            <select id="f_revenus">
               <option value="">Sélectionnez...</option>
               <option>Moins de 21 000 €/an</option>
               <option>21 000 – 30 000 €/an</option>
@@ -932,89 +932,85 @@
   const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/XXXXXXX/XXXXXXX/';
 
   // ══════════════════════════════════════════════════════
-  // 📤  SOUMISSION ZAPIER — méthode form natif (100% fiable)
+  // 📤  SOUMISSION ZAPIER
   // ══════════════════════════════════════════════════════
-  async function submitToZapier(e) {
+  function submitToZapier(e) {
     e.preventDefault();
 
-    const btn = document.getElementById('submitBtn');
+    const btn         = document.getElementById('submitBtn');
+    const prenom      = document.getElementById('f_prenom').value.trim();
+    const nom         = document.getElementById('f_nom').value.trim();
+    const telephone   = document.getElementById('f_telephone').value.trim().replace(/\s/g, '');
+    const code_postal = document.getElementById('f_codepostal').value.trim();
+    const type_logement = document.getElementById('f_logement').value;
+    const revenus     = document.getElementById('f_revenus').value;
 
-    const inputs  = document.querySelectorAll('.input-group input');
-    const selects = document.querySelectorAll('.input-group select');
-
-    const prenom        = inputs[0]?.value.trim();
-    const nom           = inputs[1]?.value.trim();
-    const telephone     = inputs[2]?.value.trim().replace(/\s/g, '');
-    const code_postal   = inputs[3]?.value.trim();
-    const type_logement = selects[0]?.value;
-    const revenus       = selects[1]?.value;
-
-    // ── Validation ──
-    if (!prenom) { showError(btn, '⚠️ Merci d\'entrer votre prénom'); return; }
-    if (!telephone || !/^0[1-9][0-9]{8}$/.test(telephone)) { showError(btn, '⚠️ Téléphone invalide (ex: 0612345678)'); return; }
-    if (!code_postal || !/^\d{5}$/.test(code_postal)) { showError(btn, '⚠️ Code postal invalide (5 chiffres)'); return; }
+    // ── Validation minimale ──
+    if (!prenom) { showError(btn, '⚠️ Entrez votre prénom'); return; }
+    if (!telephone) { showError(btn, '⚠️ Entrez votre téléphone'); return; }
+    if (!code_postal) { showError(btn, '⚠️ Entrez votre code postal'); return; }
 
     // ── Chargement ──
     btn.textContent = '⏳ Envoi en cours...';
     btn.disabled = true;
 
-    // ── Envoi via formulaire caché (contourne CORS) ──
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = https://hooks.zapier.com/hooks/catch/26684326/up213l5/;
-    form.target = 'zapier_iframe'; // envoie dans un iframe caché, pas de rechargement
-
-    const fields = {
-      prenom, nom, telephone, code_postal,
-      type_logement, revenus,
-      source:     'Landing PAC 1€',
-      date_heure: new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
-      page_url:   window.location.href,
-    };
-
-    Object.entries(fields).forEach(([key, val]) => {
-      const input = document.createElement('input');
-      input.type  = 'hidden';
-      input.name  = key;
-      input.value = val || '';
-      form.appendChild(input);
-    });
-
-    // iframe cible pour éviter la redirection
-    let iframe = document.getElementById('zapier_iframe');
+    // ── Iframe invisible pour éviter la redirection ──
+    var iframe = document.getElementById('_zap_frame');
     if (!iframe) {
       iframe = document.createElement('iframe');
-      iframe.name = 'zapier_iframe';
-      iframe.id   = 'zapier_iframe';
-      iframe.style.display = 'none';
+      iframe.id = '_zap_frame';
+      iframe.name = '_zap_frame';
+      iframe.style.cssText = 'display:none;width:0;height:0;border:0;';
       document.body.appendChild(iframe);
     }
+
+    // ── Formulaire caché soumis dans l'iframe ──
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = https://hooks.zapier.com/hooks/catch/26684326/up213l5/;
+    form.target = '_zap_frame';
+    form.style.display = 'none';
+
+    var data = {
+      prenom: prenom,
+      nom: nom,
+      telephone: telephone,
+      code_postal: code_postal,
+      type_logement: type_logement,
+      revenus: revenus,
+      source: 'Landing PAC 1euro',
+      date_heure: new Date().toLocaleString('fr-FR'),
+      page_url: window.location.href
+    };
+
+    Object.keys(data).forEach(function(key) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = data[key] || '';
+      form.appendChild(input);
+    });
 
     document.body.appendChild(form);
     form.submit();
     document.body.removeChild(form);
 
-    // ── Succès (on considère OK après 1.5s) ──
-    setTimeout(() => {
+    // ── Afficher succès après délai réseau ──
+    setTimeout(function() {
       btn.textContent = '✅ Demande envoyée ! On vous rappelle sous 48h';
       btn.style.background = 'linear-gradient(135deg, #1a6648, #3DBE82)';
-      btn.style.boxShadow  = '0 8px 24px rgba(61,190,130,0.4)';
+      btn.style.boxShadow = '0 8px 24px rgba(61,190,130,0.4)';
       btn.disabled = false;
-
-      // Tracking
-      if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { event_category: 'PAC_1euro', event_label: code_postal });
-      if (typeof fbq  !== 'undefined') fbq('track', 'Lead');
-
     }, 1500);
   }
 
   // ── Helper message d'erreur ──
   function showError(btn, msg) {
-    const original = btn.textContent;
+    var original = 'Je vérifie mon éligibilité gratuitement →';
     btn.textContent = msg;
     btn.style.background = 'linear-gradient(135deg, #7a1a1a, #E05A5A)';
     btn.disabled = false;
-    setTimeout(() => {
+    setTimeout(function() {
       btn.textContent = original;
       btn.style.background = '';
     }, 3000);
