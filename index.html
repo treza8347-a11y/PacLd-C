@@ -317,9 +317,8 @@
   </div>
 </footer>
 <script>
-  // ── URL GOOGLE APPS SCRIPT ──
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyCSdFQdV2gUckMBeew3MNZi4WXe7uSOJgx9GUHLddfkLD3xmb4Z5k-deXv8oua6GjHrQ/exec';
-  // ↑ Remplacez par votre vraie URL
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJ-gTDMDzE5wvFB1cPhfQwsNBXDoPegVGLrsidnibWJcsCQEeM-Xraq49ux19YVRzUYg/exec';
+  // ↑ Remplacez par votre URL Apps Script
 
   document.getElementById("leadForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -328,24 +327,16 @@
     btn.textContent = '⏳ Envoi en cours...';
     btn.disabled = true;
 
-    // Collecter les données du formulaire
-    const data = {
-      prenom:        this.querySelector('[name="prenom"]').value.trim(),
-      nom:           this.querySelector('[name="nom"]').value.trim(),
-      telephone:     this.querySelector('[name="telephone"]').value.trim(),
-      code_postal:   this.querySelector('[name="code_postal"]').value.trim(),
-      type_logement: this.querySelector('[name="type_logement"]').value,
-      revenus:       this.querySelector('[name="revenus"]').value
-    };
+    // ✅ Envoyer en FormData et non en JSON
+    // Google Apps Script lit parfaitement FormData via e.parameter
+    const formData = new FormData(this);
 
     fetch(SCRIPT_URL, {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(data)
+      method: 'POST',
+      mode:   'no-cors',
+      body:   formData       // ← FormData directement, pas JSON
     })
     .then(() => {
-      // Succès
       document.getElementById("successMsg").style.display = "block";
       this.reset();
       btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
