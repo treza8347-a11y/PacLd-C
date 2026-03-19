@@ -316,30 +316,49 @@
     <a href="#">Contact</a>
   </div>
 </footer>
-
-<div class="floating-counter">
-  <div class="counter-dot"></div>
-  <div class="counter-text"><strong id="counter">23</strong> personnes consultent cette page</div>
-</div>
-
 <script>
-  document.getElementById("leadForm").addEventListener("submit", function(e){
+  // ── URL GOOGLE APPS SCRIPT ──
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyR5nf2Gw5j8WQa32tDSZosEHRhdaQx3IreKtzkyL07jQXHBNDaijZVjrA5bSBTJmHQ8g/exec';
+  // ↑ Remplacez par votre vraie URL
+
+  document.getElementById("leadForm").addEventListener("submit", function(e) {
     e.preventDefault();
-    const formData = new FormData(this);
-    fetch("https://hooks.zapier.com/hooks/catch/26881476/up9jm85/", {
-      method: "POST",
-      body: formData
+
+    const btn = this.querySelector('.cta-btn');
+    btn.textContent = '⏳ Envoi en cours...';
+    btn.disabled = true;
+
+    // Collecter les données du formulaire
+    const data = {
+      prenom:        this.querySelector('[name="prenom"]').value.trim(),
+      nom:           this.querySelector('[name="nom"]').value.trim(),
+      telephone:     this.querySelector('[name="telephone"]').value.trim(),
+      code_postal:   this.querySelector('[name="code_postal"]').value.trim(),
+      type_logement: this.querySelector('[name="type_logement"]').value,
+      revenus:       this.querySelector('[name="revenus"]').value
+    };
+
+    fetch(SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(data)
     })
     .then(() => {
+      // Succès
       document.getElementById("successMsg").style.display = "block";
-      document.getElementById("leadForm").reset();
+      this.reset();
+      btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
+      btn.disabled = false;
     })
     .catch(() => {
-      alert("Erreur d'envoi. Vérifiez votre webhook Zapier.");
+      alert("Erreur d'envoi. Veuillez réessayer.");
+      btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
+      btn.disabled = false;
     });
   });
 
-  // Compteur social proof
+  // ── COMPTEUR SOCIAL PROOF ──
   const counterEl = document.getElementById('counter');
   let base = 23;
   setInterval(() => {
@@ -348,17 +367,27 @@
     counterEl.textContent = base;
   }, 4200);
 
-  // Animations scroll
+  // ── ANIMATIONS SCROLL ──
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.card, .testi-card, .step').forEach((el, i) => {
-    el.style.opacity = '0'; el.style.transform = 'translateY(24px)';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
     el.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
     observer.observe(el);
   });
 </script>
+<div class="floating-counter">
+  <div class="counter-dot"></div>
+  <div class="counter-text"><strong id="counter">23</strong> personnes consultent cette page</div>
+</div>
+
+
 </body>
 </html>
