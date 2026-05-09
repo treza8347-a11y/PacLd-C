@@ -337,28 +337,21 @@
   </div>
 </footer>
 <script>
+ <script>
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBzdV_5PjTy4cnKz3ZttW-UdMkgmVErWoFwBuMfLf99YiqruIgT0z8vI1ztJ2tUoRAhQ/exec';
-  // ↑ Remplacez par votre URL Apps Script
-  let userIP = "";
+  
+  let userIP = "En attente..."; // Valeur par défaut
 
-  // On récupère l'IP dès le chargement de la page
+  // 1. On récupère l'IP dès le chargement
   fetch('https://api.ipify.org?format=json')
     .then(response => response.json())
     .then(data => {
       userIP = data.ip;
-    });
+      console.log("IP récupérée : " + userIP);
+    })
+    .catch(err => console.error("Erreur IP:", err));
 
-  // Dans ta fonction d'envoi (ex: function handleFormSubmit)
-  // Ajoute userIP dans l'objet que tu envoies à Google Apps Script
-  function submitForm() {
-    const formData = {
-      name: document.getElementById('name').value,
-      email: document.getElementById('email').value,
-      ipAddress: userIP // <--- On ajoute l'IP ici
-    };
-    
-    // Ton appel à google.script.run...
-  }
+  // 2. Gestion de l'envoi du formulaire
   document.getElementById("leadForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -366,15 +359,16 @@
     btn.textContent = '⏳ Envoi en cours...';
     btn.disabled = true;
 
-  
-    // ✅ Envoyer en FormData et non en JSON
-    // Google Apps Script lit parfaitement FormData via e.parameter
+    // On crée l'objet FormData à partir du formulaire
     const formData = new FormData(this);
+
+    // IMPORTANT : On ajoute manuellement l'IP dans le FormData avant l'envoi
+    formData.append("ipAddress", userIP);
 
     fetch(SCRIPT_URL, {
       method: 'POST',
-      mode:   'no-cors',
-      body:   formData       // ← FormData directement, pas JSON
+      mode: 'no-cors', // Garder no-cors pour Google Apps Script
+      body: formData
     })
     .then(() => {
       document.getElementById("successMsg").style.display = "block";
@@ -382,23 +376,25 @@
       btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
       btn.disabled = false;
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error("Erreur:", error);
       alert("Erreur d'envoi. Veuillez réessayer.");
       btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
       btn.disabled = false;
     });
   });
 
-  // ── COMPTEUR SOCIAL PROOF ──
+  // ── LE RESTE DE TES SCRIPTS (COMPTEUR ET ANIMATIONS) ──
   const counterEl = document.getElementById('counter');
   let base = 23;
-  setInterval(() => {
-    const delta = Math.random() < 0.5 ? -1 : 1;
-    base = Math.max(14, Math.min(41, base + delta));
-    counterEl.textContent = base;
-  }, 4200);
+  if(counterEl) {
+      setInterval(() => {
+        const delta = Math.random() < 0.5 ? -1 : 1;
+        base = Math.max(14, Math.min(41, base + delta));
+        counterEl.textContent = base;
+      }, 4200);
+  }
 
-  // ── ANIMATIONS SCROLL ──
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -407,12 +403,14 @@
       }
     });
   }, { threshold: 0.1 });
+
   document.querySelectorAll('.card, .testi-card, .step').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
     el.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
     observer.observe(el);
   });
+</script>
 </script>
 <div class="floating-counter">
   <div class="counter-dot"></div>
