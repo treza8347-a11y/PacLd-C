@@ -365,21 +365,22 @@
     // IMPORTANT : On ajoute manuellement l'IP dans le FormData avant l'envoi
     formData.append("ipAddress", userIP);
 
-    fetch(SCRIPT_URL, {
+ fetch(SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors', // Garder no-cors pour Google Apps Script
+      mode: 'no-cors', // Obligatoire pour Google Script
       body: formData
     })
-    .then(() => {
+    .then(response => {
+      // Avec no-cors, on ne peut pas lire le contenu, 
+      // mais si on arrive ici, c'est que la requête est partie.
       document.getElementById("successMsg").style.display = "block";
-      this.reset();
-      btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
-      btn.disabled = false;
+      document.getElementById("leadForm").style.opacity = "0.3"; // Visuel pour dire c'est fini
+      document.getElementById("leadForm").style.pointerEvents = "none"; 
+      btn.textContent = '✅ Envoyé';
     })
     .catch((error) => {
-      console.error("Erreur:", error);
-      alert("Erreur d'envoi. Veuillez réessayer.");
-      btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
+      console.error("Erreur critique:", error);
+      alert("Problème de connexion. Vérifiez votre URL de script.");
       btn.disabled = false;
     });
   });
