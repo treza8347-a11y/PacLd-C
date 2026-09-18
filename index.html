@@ -1,453 +1,896 @@
 <!DOCTYPE html>
+
 <html lang="fr">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>PAC à 1€ — Chauffez votre maison sans vous ruiner</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
+
   :root {
+
     --gold: #B8860B; --gold-light: #DAA520;
+
     --dark: #1F2937; --dark-2: #374151; --dark-3: #F3F4F6;
+
     --white: #111827; --muted: #6B7280; --success: #10B981;
+
     --bg-main: #F0F4F8; --bg-card: #FFFFFF; --border-light: #D0D7DE;
+
     --primary-blue: #0F172A;
+
     --accent-blue: #1E3A8A;
+
     --soft-blue-bg: #E0F2FE;
+
   }
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   html { scroll-behavior: smooth; }
+
   body { font-family: 'DM Sans', sans-serif; background: linear-gradient(180deg, #E0F2FE 0%, #F0F4F8 100%); color: var(--white); overflow-x: hidden; }
+
   body::before {
+
     content: ''; position: fixed; inset: 0;
+
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+
     pointer-events: none; z-index: 0; opacity: 0.5;
+
   }
+
   /* TOPBAR */
+
   .topbar { background: #B91C1C; text-align: center; padding: 10px 20px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; animation: pulse-bar 3s ease-in-out infinite; position: relative; z-index: 10; }
+
   @keyframes pulse-bar { 0%,100%{opacity:1} 50%{opacity:0.85} }
+
   .topbar span { color: #FFD700; margin: 0 6px; }
+
   /* HEADER */
+
   header { position: relative; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; border-bottom: 1px solid var(--border-light); background: #FFFFFF; }
+
   .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); letter-spacing: 0.04em; }
+
   .logo span { color: var(--accent-blue); }
+
   .trust-badge { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--muted); }
+
   .trust-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: blink 2s ease-in-out infinite; }
+
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
   /* HERO */
+
   .hero { position: relative; min-height: 92vh; display: flex; align-items: center; justify-content: center; padding: 80px 40px; overflow: hidden; z-index: 2; background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 50%, #F0F9FF 100%); }
+
   .hero::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 700px; background: radial-gradient(ellipse, rgba(30, 58, 138, 0.08) 0%, transparent 70%); pointer-events: none; }
+
   .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; max-width: 1200px; width: 100%; align-items: center; }
+
   .hero-left { position: relative; }
+
   .badge-top { display: inline-flex; align-items: center; gap: 8px; background: rgba(30, 58, 138, 0.08); border: 1px solid rgba(30, 58, 138, 0.2); border-radius: 100px; padding: 6px 16px; font-size: 0.75rem; font-weight: 600; color: #1E3A8A; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 28px; animation: fadeSlideUp 0.6s ease both; }
+
   .badge-top svg { width: 14px; height: 14px; }
+
   h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.6rem, 4.5vw, 4.2rem); line-height: 1.1; font-weight: 900; color: #0F172A; animation: fadeSlideUp 0.7s 0.1s ease both; }
+
   h1 .accent { background: linear-gradient(135deg, #1E3A8A, #0284C7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
   h1 .strike { text-decoration: line-through; color: var(--muted); font-size: 0.7em; }
+
   .hero-sub { margin-top: 20px; font-size: 1.05rem; color: #334155; line-height: 1.6; font-weight: 300; max-width: 460px; animation: fadeSlideUp 0.7s 0.2s ease both; }
+
   .hero-stats { display: flex; gap: 32px; margin-top: 36px; animation: fadeSlideUp 0.7s 0.3s ease both; }
+
   .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #1E3A8A; line-height: 1; }
+
   .stat-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
+
   .stat-divider { width: 1px; background: var(--border-light); align-self: stretch; }
+
   /* FORM CARD */
+
   .form-card { background: #FFFFFF; border: 1px solid rgba(30, 58, 138, 0.2); border-radius: 20px; padding: 44px 40px; position: relative; overflow: hidden; animation: fadeSlideUp 0.7s 0.2s ease both; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08); }
+
   .form-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #1E3A8A, #0284C7, #1E3A8A); }
+
   .form-card-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #0F172A; margin-bottom: 6px; }
+
   .form-card-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 28px; }
+
   .price-display { display: flex; align-items: baseline; gap: 10px; margin-bottom: 28px; background: #F0F9FF; border: 1px solid #BAE6FD; border-radius: 12px; padding: 16px 20px; }
+
   .price-old { font-size: 1.2rem; color: var(--muted); text-decoration: line-through; }
+
   .price-new { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; color: #1E3A8A; line-height: 1; }
+
   .price-note { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
   .input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+
   .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
   .field label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+
   .field input, .field select { width: 100%; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 10px; padding: 13px 16px; color: #0F172A; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none; }
+
   .field input:focus, .field select:focus { border-color: #1E3A8A; box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12); }
+
   .field select option { background: #FFFFFF; color: #0F172A; }
+
   .cta-btn { width: 100%; background: linear-gradient(135deg, #1E3A8A, #0284C7); color: #FFFFFF; border: none; border-radius: 12px; padding: 17px 24px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; margin-top: 8px; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 24px rgba(30, 58, 138, 0.25); }
+
   .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(30, 58, 138, 0.35); }
+
   .cta-btn::after { content: ''; position: absolute; top: -50%; left: -60%; width: 40%; height: 200%; background: rgba(255,255,255,0.25); transform: skewX(-20deg); transition: left 0.5s; }
+
   .cta-btn:hover::after { left: 130%; }
+
   #successMsg { display: none; margin-top: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 16px 20px; color: #065F46; font-size: 0.9rem; font-weight: 500; text-align: center; line-height: 1.6; }
+
   .form-trust { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 14px; font-size: 0.73rem; color: var(--muted); }
+
   /* LOGOS */
+
   .logos-section { padding: 40px 60px; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); position: relative; z-index: 2; background: #FFFFFF; }
+
   .logos-title { text-align: center; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+
   .logos-row { display: flex; justify-content: center; align-items: center; gap: 48px; flex-wrap: wrap; }
+
   .logo-item { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: #94A3B8; transition: color 0.3s; }
+
   .logo-item:hover { color: #1E3A8A; }
+
   /* AVANTAGES */
+
   .avantages { padding: 100px 60px; position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; }
+
   .section-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: #1E3A8A; margin-bottom: 16px; }
+
   .section-tag::before { content: ''; display: block; width: 24px; height: 1px; background: #1E3A8A; }
+
   .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); margin-bottom: 56px; max-width: 500px; line-height: 1.2; color: #0F172A; }
+
   .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
   .card { background: #FFFFFF; border: 1px solid var(--border-light); border-radius: 16px; padding: 36px 32px; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); }
+
   .card:hover { border-color: rgba(30, 58, 138, 0.4); transform: translateY(-4px); box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08); }
-  .card-icon { width: 48px; height: 48px; background: #E0F2FE; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.4rem; overflow: hidden; }
-  .card-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+  .card-icon { width: 48px; height: 48px; background: #E0F2FE; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.4rem; }
+
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 10px; color: #0F172A; }
+
+  .card p { font-size: 0.88rem; color: #475569; line-height: 1.6; }
+
   /* PROCESS */
+
   .process { padding: 100px 60px; background: #F1F5F9; position: relative; z-index: 2; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); }
+
   .process-inner { max-width: 1200px; margin: 0 auto; }
+
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 56px; position: relative; }
+
   .steps::before { content: ''; position: absolute; top: 28px; left: 10%; width: 80%; height: 1px; background: linear-gradient(90deg, transparent, rgba(30, 58, 138, 0.3), transparent); }
+
   .step { text-align: center; padding: 0 20px; }
+
   .step-num { width: 56px; height: 56px; border-radius: 50%; border: 2px solid rgba(30, 58, 138, 0.35); background: #FFFFFF; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #1E3A8A; position: relative; z-index: 1; transition: background 0.3s, border-color 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+
   .step:hover .step-num { background: #E0F2FE; border-color: #1E3A8A; }
+
   .step h4 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 8px; color: #0F172A; }
+
   .step p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
   /* TEMOIGNAGES */
+
   .testimonials { padding: 100px 60px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+
   .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+
   .testi-card { background: #FFFFFF; border: 1px solid var(--border-light); border-radius: 16px; padding: 32px 28px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); }
+
   .testi-quote { font-size: 3rem; color: rgba(30, 58, 138, 0.2); font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 12px; }
+
   .testi-text { font-size: 0.88rem; color: #334155; line-height: 1.6; margin-bottom: 20px; }
+
   .testi-author { display: flex; align-items: center; gap: 12px; }
+
   .testi-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1E3A8A, #0284C7); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #FFFFFF; }
+
   .testi-name { font-size: 0.85rem; font-weight: 600; color: #0F172A; }
+
   .testi-city { font-size: 0.75rem; color: var(--muted); }
+
   .stars { color: #0284C7; font-size: 0.75rem; margin-bottom: 4px; }
+
   /* CTA */
+
   .cta-section { padding: 100px 60px; text-align: center; background: linear-gradient(180deg, #E0F2FE 0%, #F0F9FF 100%); position: relative; z-index: 2; }
+
   .cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3.5vw, 3rem); margin-bottom: 16px; color: #0F172A; }
+
   .cta-section p { color: var(--muted); margin-bottom: 40px; }
+
   .cta-inline-btn { display: inline-block; background: linear-gradient(135deg, #1E3A8A, #0284C7); color: #FFFFFF; border: none; border-radius: 12px; padding: 18px 48px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 24px rgba(30, 58, 138, 0.25); }
+
   .cta-inline-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(30, 58, 138, 0.35); }
+
   /* FOOTER */
+
   footer { padding: 40px 60px; border-top: 1px solid var(--border-light); background: #FFFFFF; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; position: relative; z-index: 2; }
+
   footer .logo { font-size: 1.1rem; }
+
   footer p { font-size: 0.75rem; color: var(--muted); }
+
   .footer-links { display: flex; gap: 24px; }
+
   .footer-links a { font-size: 0.75rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+
   .footer-links a:hover { color: #1E3A8A; }
+
   /* FLOATING COUNTER */
+
   .floating-counter { position: fixed; bottom: 28px; right: 28px; background: #FFFFFF; border: 1px solid rgba(30, 58, 138, 0.2); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 10px; z-index: 100; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1); animation: slideInRight 0.6s 1s ease both; }
+
   @keyframes slideInRight { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+
   .counter-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: blink 2s ease-in-out infinite; }
+
   .counter-text { font-size: 0.78rem; color: #334155; }
+
   .counter-text strong { color: #1E3A8A; }
+
   @keyframes fadeSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
   /* RESPONSIVE */
+
   @media (max-width: 900px) {
+
     header, .logos-section, .avantages, .process, .testimonials, .cta-section, footer { padding-left: 24px; padding-right: 24px; }
+
     .hero { padding: 60px 24px; }
+
     .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+
     .cards-grid, .testi-grid { grid-template-columns: 1fr; }
+
     .steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+
     .steps::before { display: none; }
+
     .input-row { grid-template-columns: 1fr; }
+
     header { padding: 16px 24px; }
+
     .trust-badge { display: none; }
+
     .floating-counter { bottom: 16px; right: 16px; }
+
   }
+
 </style>
+
 </head>
+
 <body>
 
+
+
 <div class="topbar">
+
   🔥 Offre gouvernementale limitée — <span>Il ne reste que 47 dossiers disponibles</span> dans votre région — Obtenez votre PAC à <span>1€ aujourd'hui</span>
+
 </div>
+
+
 
 <header>
+
   <div class="logo">énérgie<span>renouvelable</span></div>
+
   <div class="trust-badge">
+
     <div class="dot"></div>
+
     Certifié RGE · Agrément ANAH · Partenaire MaPrimeRénov'
+
   </div>
+
 </header>
 
+
+
 <section class="hero">
+
   <div class="hero-grid">
+
     <div class="hero-left">
+
       <div class="badge-top">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+
         Programme MaPrimeRénov' 2026
+
       </div>
+
       <h1>
-        Bénéficiez d'une pompe à chaleur<br>
+
+       Bénéficiez d'une pompe à chaleur<br>
+
         <span class="accent">à 1€ seulement Reste à charge après aides d'État</span><br>
+
         <span class="strike">au lieu de 8 000€</span>
+
       </h1>
+
       <p class="hero-sub">
+
         Grâce aux aides de l'État, financez votre PAC air/air ou air/eau à prix symbolique. Économisez jusqu'à <strong>70% sur vos factures</strong> de chauffage dès le premier hiver.
+
       </p>
+
       <div class="hero-stats">
+
         <div class="stat-item">
+
           <div class="stat-num">8 600€</div>
+
           <div class="stat-label">d'aides disponibles</div>
+
         </div>
+
         <div class="stat-divider"></div>
+
         <div class="stat-item">
+
           <div class="stat-num">-70%</div>
+
           <div class="stat-label">sur vos factures</div>
+
         </div>
+
         <div class="stat-divider"></div>
+
         <div class="stat-item">
+
           <div class="stat-num">48h</div>
+
           <div class="stat-label">pour un devis</div>
+
         </div>
+
       </div>
+
     </div>
+
+
 
     <div class="hero-right">
+
       <div class="form-card">
+
         <div class="form-card-title">Vérifier mon éligibilité</div>
+
         <div class="form-card-sub">Gratuit · Sans engagement · Réponse en 48h</div>
+
         <div class="price-display">
+
           <span class="price-old">8 600 €</span>
+
           <span class="price-new">1 €</span>
+
           <div class="price-note">Reste à charge<br>après aides d'État</div>
+
         </div>
+
+
 
         <form id="leadForm">
+
           <div class="input-group">
+
             <div class="input-row">
+
               <div class="field">
+
                 <label>Prénom</label>
+
                 <input type="text" name="prenom" placeholder="Jean" required />
+
               </div>
+
               <div class="field">
+
                 <label>Nom</label>
+
                 <input type="text" name="nom" placeholder="Dupont" />
+
               </div>
+
             </div>
+
             <div class="field">
+
               <label>Téléphone</label>
+
               <input type="tel" name="telephone" placeholder="06 XX XX XX XX" required />
+
             </div>
+
             <div class="field">
+
               <label>Code postal</label>
+
               <input type="text" name="code_postal" placeholder="75000" required />
+
             </div>
+
             <div class="field">
+
                 <label>Mail</label>
+
                 <input type="text" name="Mail" placeholder="Votre E-mail" required />
+
               </div>
-              <div class="field">
+
+             <div class="field">
+
                 <label>Mode de chauffage</label>
+
                 <input type="text" name="Mode-chauffage" placeholder="Votre Mode de chauffage" required />
+
               </div>
-              <div class="field">
+
+             <div class="field">
+
                 <label> revenu fiscale</label>
+
                 <input type="text" name="revenue" placeholder="Votre revenue fiscal" required />
+
               </div>
-              <div class="field">
+
+             <div class="field">
+
                 <label>Superficie habitable</label>
+
                 <input type="text" name="superficie" placeholder="Votre superficie habitable " required />
+
               </div>
+
             <div class="field">
+
               <label>Type de logement</label>
+
               <select name="type_logement">
+
                 <option value="">Sélectionnez...</option>
+
                 <option>Maison individuelle</option>
+
                 <option>Maison mitoyenne</option> 
+
                 <option>Appartement</option>
+
               </select>
+
             </div>
+
             <div class="field">
+
               <label>NOMBRE DE PERSONNES DECLARES</label>
+
               <select name="revenus">
+
                 <option value="">Sélectionnez...</option>
+
                 <option>1</option>
+
                 <option>2</option>
+
                 <option>3</option>
+
                 <option>4</option>
+
                 <option>5</option>
+
                 <option>plus de 5</option>
+
               </select>
+
             </div>
-              <div class="field">
+
+             <div class="field">
+
               <label>Produit souhaité</label>
+
               <select name="produit">
+
                 <option value="">Sélectionnez...</option>
+
                 <option>Pac seul</option>
+
                 <option>Pac+ballon éléctrique</option>
+
                 <option>Pac+systém solaire combiné</option>
+
               </select>
+
             </div>
+
           <div class="field" style="margin-top: 16px;">
+
   <label>Heure de rappel souhaitée</label>
+
   <select name="dispo_heure" required style="width: 100%; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 10px; padding: 13px 16px; color: #0F172A; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; outline: none;">
+
     <option value="">Sélectionnez un créneau...</option>
+
     <option>Matin (09h - 12h)</option>
+
     <option>Midi (12h - 14h)</option>
+
     <option>Après-midi (14h - 18h)</option>
+
     <option>Soir (18h - 20h)</option>
+
     <option>Dès que possible</option>
+
   </select>
+
 </div>
+
  
+
           <button type="submit" class="cta-btn">
+
             Je vérifie mon éligibilité gratuitement →
+
           </button>
+
         </form>
 
+
+
         <div id="successMsg">
+
           ✅ Demande bien reçue !<br>Un conseiller vous rappelle sous 48h.
+
         </div>
+
+
 
         <div class="form-trust">
+
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10h14V4h-3.5zM8 9a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+
           Données protégées · 100% sécurisé · Aucune obligation
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </section>
+
+
 
 <div class="logos-section">
+
   <div class="logos-title">Partenaires officiels & certifications</div>
+
   <div class="logos-row">
+
     <div class="logo-item">ANAH</div>
+
     <div class="logo-item">MaPrimeRénov'</div>
+
     <div class="logo-item">RGE Qualibat</div>
+
     <div class="logo-item">CEE</div>
+
     <div class="logo-item">Ministère de l'Énergie</div>
+
     <div class="logo-item">Eco Artisan</div>
+
   </div>
+
 </div>
+
+
 
 <section class="avantages">
+
   <div class="section-tag">Pourquoi choisir la PAC</div>
+
   <h2 class="section-title">Tout ce que vous gagnez avec votre pompe à chaleur</h2>
+
   <div class="cards-grid">
-    <div class="card">
-      <div class="card-icon">
-        <img src="pac_test.jpg" alt="Pompe à chaleur">
-      </div>
-      <h3>Confort hiver & été</h3>
-      <p>Chauffage en hiver, climatisation réversible en été. Un seul équipement pour toutes les saisons, installé sans travaux majeurs.</p>
-    </div>
+
+    <div class="card"><div class="card-icon">🌡️</div><h3>Confort hiver & été</h3><p>Chauffage en hiver, climatisation réversible en été. Un seul équipement pour toutes les saisons, installé sans travaux majeurs.</p></div>
+
     <div class="card"><div class="card-icon">💰</div><h3>Économies immédiates</h3><p>Réduisez votre facture d'énergie de 40 à 70% dès le premier mois. La PAC produit 3 à 4 fois plus d'énergie qu'elle n'en consomme.</p></div>
+
     <div class="card"><div class="card-icon">🌿</div><h3>Écologique & durable</h3><p>Réduisez vos émissions de CO₂ de 60% et valorisez votre bien immobilier avec un meilleur DPE. Un geste pour la planète.</p></div>
+
     <div class="card"><div class="card-icon">🏆</div><h3>Installation certifiée RGE</h3><p>Nos installateurs sont tous certifiés RGE (Reconnu Garant de l'Environnement), condition indispensable pour bénéficier des aides.</p></div>
+
     <div class="card"><div class="card-icon">📋</div><h3>Dossier géré à 100%</h3><p>Nos experts s'occupent de toutes les démarches administratives : MaPrimeRénov', CEE, TVA réduite. Zéro paperasse pour vous.</p></div>
+
     <div class="card"><div class="card-icon">🛡️</div><h3>Garantie 10 ans</h3><p>Votre PAC est couverte par une garantie décennale complète, pièces et main-d'œuvre. Votre investissement est protégé.</p></div>
+
   </div>
+
 </section>
+
+
 
 <section class="process">
+
   <div class="process-inner">
+
     <div class="section-tag">La démarche</div>
+
     <h2 class="section-title">Simple comme 1, 2, 3, 4</h2>
+
     <div class="steps">
+
       <div class="step"><div class="step-num">1</div><h4>Simulez en ligne</h4><p>Remplissez le formulaire en 2 minutes et vérifiez votre éligibilité instantanément.</p></div>
+
       <div class="step"><div class="step-num">2</div><h4>Visite technique</h4><p>Un expert se déplace chez vous gratuitement pour évaluer votre projet et choisir le bon modèle.</p></div>
+
       <div class="step"><div class="step-num">3</div><h4>Montage des aides</h4><p>Notre équipe monte votre dossier MaPrimeRénov' et CEE pour maximiser vos subventions.</p></div>
+
       <div class="step"><div class="step-num">4</div><h4>Installation rapide</h4><p>Pose en une journée par nos installateurs RGE. Vous payez uniquement votre euro symbolique.</p></div>
+
     </div>
+
   </div>
+
 </section>
+
+
 
 <section class="testimonials">
+
   <div class="section-tag">Témoignages</div>
+
   <h2 class="section-title">Ils ont sauté le pas, ils ne regrettent pas</h2>
+
   <div class="testi-grid">
+
     <div class="testi-card"><div class="testi-quote">"</div><p class="testi-text">Franchement incroyable. Ma facture de gaz est passée de 180€ à 52€ par mois. L'équipe a géré tout le dossier, je n'ai eu qu'à signer.</p><div class="testi-author"><div class="testi-avatar">MB</div><div><div class="stars">★★★★★</div><div class="testi-name">Marie-Bernadette L.</div><div class="testi-city">Lyon, 69 — installée en nov. 2024</div></div></div></div>
+
     <div class="testi-card"><div class="testi-quote">"</div><p class="testi-text">J'étais sceptique mais le conseiller m'a tout expliqué. Vraiment 1€ de reste à charge. Maison chauffée au top et clim en été. Parfait.</p><div class="testi-author"><div class="testi-avatar">PT</div><div><div class="stars">★★★★★</div><div class="testi-name">Philippe T.</div><div class="testi-city">Bordeaux, 33 — installé en sept. 2024</div></div></div></div>
+
     <div class="testi-card"><div class="testi-quote">"</div><p class="testi-text">Super réactifs, installateurs propres et professionnels. DPE passé de E à B. La valeur de ma maison a augmenté, en plus des économies !</p><div class="testi-author"><div class="testi-avatar">SC</div><div><div class="stars">★★★★★</div><div class="testi-name">Sophie C.</div><div class="testi-city">Nantes, 44 — installée en janv. 2025</div></div></div></div>
+
   </div>
+
 </section>
+
+
 
 <section class="cta-section">
+
   <h2>Ne laissez pas passer cette opportunité</h2>
+
   <p>Les fonds gouvernementaux sont limités. Chaque jour, des dossiers sont clôturés.</p>
+
   <a href="#" class="cta-inline-btn" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Obtenir ma PAC à 1€ maintenant →</a>
+
 </section>
 
+
+
 <footer>
+
   <div class="logo">énérgie<span>renouvelable</span></div>
+
   <p>© 2025 ÉcoConfort · Sous réserve d'éligibilité · Aides soumises à conditions de ressources</p>
+
   <div class="footer-links">
+
     <a href="#">Mentions légales</a>
+
     <a href="#">Politique de confidentialité</a>
+
     <a href="#">Contact</a>
+
   </div>
+
 </footer>
+
 <script>
+
   // URL de déploiement Google Apps Script
+
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSaVOIvLMC2fArURGTKmXGza3c4J7qKDkt39blrmvSuI6uQXfTG_aNMhNKw4ju5ehaLA/exec';
+
   
+
   let userIP = "En attente...";
 
+
+
   // 1. Récupération de l'adresse IP
+
   fetch('https://api.ipify.org?format=json')
+
     .then(response => response.json())
+
     .then(data => {
+
       userIP = data.ip;
+
       console.log("IP récupérée : " + userIP);
+
     })
+
     .catch(err => console.error("Erreur IP:", err));
 
+
+
   // 2. Gestion de la soumission du formulaire
+
   document.getElementById("leadForm").addEventListener("submit", function(e) {
+
     e.preventDefault();
 
+
+
     const btn = this.querySelector('.cta-btn');
+
     btn.textContent = '⏳ Envoi en cours...';
+
     btn.disabled = true;
 
+
+
     // Préparation des données
+
     const formData = new FormData(this);
+
     formData.append("ipAddress", userIP);
 
+
+
     // Conversion en URLSearchParams (Crucial pour Google Apps Script)
+
     const payload = new URLSearchParams(formData);
 
+
+
     fetch(SCRIPT_URL, {
+
       method: 'POST',
+
       mode: 'no-cors',
+
       headers: {
+
         'Content-Type': 'application/x-www-form-urlencoded'
+
       },
+
       body: payload
+
     })
+
     .then(() => {
+
       document.getElementById("successMsg").style.display = "block";
+
       document.getElementById("leadForm").style.opacity = "0.3";
+
       document.getElementById("leadForm").style.pointerEvents = "none"; 
+
       btn.textContent = '✅ Envoyé';
+
     })
+
     .catch((error) => {
+
       console.error("Erreur critique:", error);
+
       alert("Une erreur s'est produite lors de l'envoi.");
+
       btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
+
       btn.disabled = false;
+
     });
+
   });
+
+
 
   // 3. Compteur d'utilisateurs
+
   const counterEl = document.getElementById('counter');
+
   let base = 23;
+
   if(counterEl) {
+
       setInterval(() => {
+
         const delta = Math.random() < 0.5 ? -1 : 1;
+
         base = Math.max(14, Math.min(41, base + delta));
+
         counterEl.textContent = base;
+
       }, 4200);
+
   }
 
+
+
   // 4. Animations au défilement
+
   const observer = new IntersectionObserver((entries) => {
+
     entries.forEach(e => {
+
       if (e.isIntersecting) {
+
         e.target.style.opacity = '1';
+
         e.target.style.transform = 'translateY(0)';
+
       }
+
     });
+
   }, { threshold: 0.1 });
 
+
+
   document.querySelectorAll('.card, .testi-card, .step').forEach((el, i) => {
+
     el.style.opacity = '0';
+
     el.style.transform = 'translateY(24px)';
+
     el.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
+
     observer.observe(el);
+
   });
+
 </script>
+
 <div class="floating-counter">
+
   <div class="counter-dot"></div>
+
   <div class="counter-text"><strong id="counter">23</strong> personnes consultent cette page</div>
+
 </div>
 
+
+
 </body>
-</html>
+
+</html> 
+
