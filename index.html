@@ -84,9 +84,8 @@
   .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .card { background: #FFFFFF; border: 1px solid var(--border-light); border-radius: 16px; padding: 36px 32px; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); }
   .card:hover { border-color: rgba(30, 58, 138, 0.4); transform: translateY(-4px); box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08); }
-  .card-icon { width: 48px; height: 48px; background: #E0F2FE; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.4rem; }
-  .card h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 10px; color: #0F172A; }
-  .card p { font-size: 0.88rem; color: #475569; line-height: 1.6; }
+  .card-icon { width: 48px; height: 48px; background: #E0F2FE; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.4rem; overflow: hidden; }
+  .card-icon img { width: 100%; height: 100%; object-fit: cover; }
   /* PROCESS */
   .process { padding: 100px 60px; background: #F1F5F9; position: relative; z-index: 2; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); }
   .process-inner { max-width: 1200px; margin: 0 auto; }
@@ -165,7 +164,7 @@
         Programme MaPrimeRénov' 2026
       </div>
       <h1>
-       Bénéficiez d'une pompe à chaleur<br>
+        Bénéficiez d'une pompe à chaleur<br>
         <span class="accent">à 1€ seulement Reste à charge après aides d'État</span><br>
         <span class="strike">au lieu de 8 000€</span>
       </h1>
@@ -224,15 +223,15 @@
                 <label>Mail</label>
                 <input type="text" name="Mail" placeholder="Votre E-mail" required />
               </div>
-             <div class="field">
+              <div class="field">
                 <label>Mode de chauffage</label>
                 <input type="text" name="Mode-chauffage" placeholder="Votre Mode de chauffage" required />
               </div>
-             <div class="field">
+              <div class="field">
                 <label> revenu fiscale</label>
                 <input type="text" name="revenue" placeholder="Votre revenue fiscal" required />
               </div>
-             <div class="field">
+              <div class="field">
                 <label>Superficie habitable</label>
                 <input type="text" name="superficie" placeholder="Votre superficie habitable " required />
               </div>
@@ -257,7 +256,7 @@
                 <option>plus de 5</option>
               </select>
             </div>
-             <div class="field">
+              <div class="field">
               <label>Produit souhaité</label>
               <select name="produit">
                 <option value="">Sélectionnez...</option>
@@ -312,7 +311,13 @@
   <div class="section-tag">Pourquoi choisir la PAC</div>
   <h2 class="section-title">Tout ce que vous gagnez avec votre pompe à chaleur</h2>
   <div class="cards-grid">
-    <div class="card"><div class="card-icon">🌡️</div><h3>Confort hiver & été</h3><p>Chauffage en hiver, climatisation réversible en été. Un seul équipement pour toutes les saisons, installé sans travaux majeurs.</p></div>
+    <div class="card">
+      <div class="card-icon">
+        <img src="images/pompe-a-chaleur.jpg" alt="Pompe à chaleur">
+      </div>
+      <h3>Confort hiver & été</h3>
+      <p>Chauffage en hiver, climatisation réversible en été. Un seul équipement pour toutes les saisons, installé sans travaux majeurs.</p>
+    </div>
     <div class="card"><div class="card-icon">💰</div><h3>Économies immédiates</h3><p>Réduisez votre facture d'énergie de 40 à 70% dès le premier mois. La PAC produit 3 à 4 fois plus d'énergie qu'elle n'en consomme.</p></div>
     <div class="card"><div class="card-icon">🌿</div><h3>Écologique & durable</h3><p>Réduisez vos émissions de CO₂ de 60% et valorisez votre bien immobilier avec un meilleur DPE. Un geste pour la planète.</p></div>
     <div class="card"><div class="card-icon">🏆</div><h3>Installation certifiée RGE</h3><p>Nos installateurs sont tous certifiés RGE (Reconnu Garant de l'Environnement), condition indispensable pour bénéficier des aides.</p></div>
