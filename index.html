@@ -360,12 +360,12 @@
   </div>
 </footer>
 <script>
+  // URL de déploiement Google Apps Script
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSaVOIvLMC2fArURGTKmXGza3c4J7qKDkt39blrmvSuI6uQXfTG_aNMhNKw4ju5ehaLA/exec';
   
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQtZxPupkMfbfLbT_k0oGUnfINukrLNcPak1ap-TXpf63xkbXAxFOs8gRRYKdA3q1YfA/exec';
-  
-  let userIP = "En attente..."; // Valeur par défaut
+  let userIP = "En attente...";
 
-  // 1. On récupère l'IP dès le chargement
+  // 1. Récupération de l'adresse IP
   fetch('https://api.ipify.org?format=json')
     .then(response => response.json())
     .then(data => {
@@ -374,7 +374,7 @@
     })
     .catch(err => console.error("Erreur IP:", err));
 
-  // 2. Gestion de l'envoi du formulaire
+  // 2. Gestion de la soumission du formulaire
   document.getElementById("leadForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -382,33 +382,36 @@
     btn.textContent = '⏳ Envoi en cours...';
     btn.disabled = true;
 
-    // On crée l'objet FormData à partir du formulaire
+    // Préparation des données
     const formData = new FormData(this);
-
-    // IMPORTANT : On ajoute manuellement l'IP dans le FormData avant l'envoi
     formData.append("ipAddress", userIP);
 
-  fetch(SCRIPT_URL, {
+    // Conversion en URLSearchParams (Crucial pour Google Apps Script)
+    const payload = new URLSearchParams(formData);
+
+    fetch(SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors', // Obligatoire pour Google Script
-      body: formData
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: payload
     })
-    .then(response => {
-      // Avec no-cors, on ne peut pas lire le contenu, 
-      // mais si on arrive ici, c'est que la requête est partie.
+    .then(() => {
       document.getElementById("successMsg").style.display = "block";
-      document.getElementById("leadForm").style.opacity = "0.3"; // Visuel pour dire c'est fini
+      document.getElementById("leadForm").style.opacity = "0.3";
       document.getElementById("leadForm").style.pointerEvents = "none"; 
       btn.textContent = '✅ Envoyé';
     })
     .catch((error) => {
       console.error("Erreur critique:", error);
-      alert("Problème de connexion. Vérifiez votre URL de script.");
+      alert("Une erreur s'est produite lors de l'envoi.");
+      btn.textContent = 'Je vérifie mon éligibilité gratuitement →';
       btn.disabled = false;
     });
   });
 
-  // ── LE RESTE DE TES SCRIPTS (COMPTEUR ET ANIMATIONS) ──
+  // 3. Compteur d'utilisateurs
   const counterEl = document.getElementById('counter');
   let base = 23;
   if(counterEl) {
@@ -419,6 +422,7 @@
       }, 4200);
   }
 
+  // 4. Animations au défilement
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -434,7 +438,6 @@
     el.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
     observer.observe(el);
   });
-
 </script>
 <div class="floating-counter">
   <div class="counter-dot"></div>
